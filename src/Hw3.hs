@@ -111,7 +111,7 @@ type ListEnv = [(String, Int)]
 
 varExprListEval :: ListEnv -> VarExpr -> Maybe Int
 varExprListEval env (NumVE n) = Just n
-varExprListEval env (VarExpr x) = lookup x env
+varExprListEval env (Var x) = lookup x env
 varExprListEval env (PlusVE e1 e2) = opMaybe (+) (varExprListEval env e1) (varExprListEval env e2)
 varExprListEval env (MinusVE e1 e2) = opMaybe (-) (varExprListEval env e1) (varExprListEval env e2)
 varExprListEval env (TimesVE e1 e2) = opMaybe (*) (varExprListEval env e1) (varExprListEval env e2)
@@ -145,7 +145,7 @@ type FunEnv = String -> Maybe Int
 
 varExprFunEval :: FunEnv -> VarExpr -> Maybe Int
 varExprFunEval env (NumVE n) = Just n
-varExprFunEval env (VarExpr x) = env x
+varExprFunEval env (Var x) = env x
 varExprFunEval env (PlusVE e1 e2) = opMaybe (+) (varExprFunEval env e1) (varExprFunEval env e2)
 varExprFunEval env (MinusVE e1 e2) = opMaybe (-) (varExprFunEval env e1) (varExprFunEval env e2)
 varExprFunEval env (TimesVE e1 e2) = opMaybe (*) (varExprFunEval env e1) (varExprFunEval env e2)
@@ -173,8 +173,11 @@ varExprFunEval env (TimesVE e1 e2) = opMaybe (*) (varExprFunEval env e1) (varExp
 
 instance Show VarExpr where
   show :: VarExpr -> String
-  show expr = error "TBD: show"
-
+  show (NumVE x) = show x
+  show (Var x) = x
+  show (PlusVE e1 e2) = "(" ++ (show e1) ++ "+" ++ (show e2) ")"
+  show (MinusVE e1 e2) = "(" ++ (show e1) ++ "-" ++ (show e2) ")"
+  show (TimesVE e1 e2) = "(" ++ (show e1) ++ "*" ++ (show e2) ")"
 
 
 
@@ -197,7 +200,7 @@ instance Show VarExpr where
 
 instance Eq VarExpr where
   (==) :: VarExpr -> VarExpr -> Bool
-  (==) expr1 expr2 = error "TBD: (==)"
+  (==) expr1 expr2 = varExprFunEval env expr1 == varExprFunEval env expr2 -- working on this, considerign the implications
 
 
 
