@@ -110,8 +110,11 @@ type ListEnv = [(String, Int)]
 -- Just 21
 
 varExprListEval :: ListEnv -> VarExpr -> Maybe Int
-varExprListEval env expr = error "TBD: varEval"
-
+varExprListEval env (NumVE n) = Just n
+varExprListEval env (VarExpr x) = lookup x env
+varExprListEval env (PlusVE e1 e2) = opMaybe (+) (varExprListEval env e1) (varExprListEval env e2)
+varExprListEval env (MinusVE e1 e2) = opMaybe (-) (varExprListEval env e1) (varExprListEval env e2)
+varExprListEval env (TimesVE e1 e2) = opMaybe (*) (varExprListEval env e1) (varExprListEval env e2)
 
 
 
@@ -141,9 +144,11 @@ type FunEnv = String -> Maybe Int
 -- Just 21
 
 varExprFunEval :: FunEnv -> VarExpr -> Maybe Int
-varExprFunEval env expr = error "TBD: varExprFunEval"
-
-
+varExprFunEval env (NumVE n) = Just n
+varExprFunEval env (VarExpr x) = env x
+varExprFunEval env (PlusVE e1 e2) = opMaybe (+) (varExprFunEval env e1) (varExprFunEval env e2)
+varExprFunEval env (MinusVE e1 e2) = opMaybe (-) (varExprFunEval env e1) (varExprFunEval env e2)
+varExprFunEval env (TimesVE e1 e2) = opMaybe (*) (varExprFunEval env e1) (varExprFunEval env e2)
 
 
 -- | `show` takes a `VarExpr` and returns a printable string representation of it.
