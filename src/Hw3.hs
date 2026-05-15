@@ -31,7 +31,10 @@ data Expr = PlusE Expr Expr
 -- -6
 
 simpleEval :: Expr -> Int
-simpleEval expr = error "TBD: simpleEval"
+simpleEval NumE e = e
+simpleEval PlusE e1 e2 = (simpleEval e1) + (simpleEval e2)
+simpleEval MinusE e1 e2 = (simpleEval e1) - (simpleEval e2)
+simpleEval TimesE e1 e2 = (simpleEval e1) * (simpleEval e2)
 
 
 
@@ -69,7 +72,8 @@ simpleEval expr = error "TBD: simpleEval"
 -- Nothing
 
 opMaybe :: (Int -> Int -> Int) -> Maybe Int -> Maybe Int -> Maybe Int
-opMaybe op m1 m2 = error "TBD: opMaybe"
+opMaybe op (Just x) (Just y) = Just(op x y)
+opMaybe _ _ _ = Nothing
 
 
 
