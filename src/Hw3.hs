@@ -108,6 +108,11 @@ type ListEnv = [(String, Int)]
 --
 -- >>> varExprListEval [] (TimesVE (NumVE 7) (NumVE 3))
 -- Just 21
+lookup :: String -> ListEnv -> Maybe Int
+lookup u [] = Nothing
+lookup u ((x,y):xs)
+  | u == x = Just y
+  | otherwise = lookup u xs 
 
 varExprListEval :: ListEnv -> VarExpr -> Maybe Int
 varExprListEval env (NumVE n) = Just n
@@ -175,9 +180,9 @@ instance Show VarExpr where
   show :: VarExpr -> String
   show (NumVE x) = show x
   show (Var x) = x
-  show (PlusVE e1 e2) = "(" ++ (show e1) ++ "+" ++ (show e2) ")"
-  show (MinusVE e1 e2) = "(" ++ (show e1) ++ "-" ++ (show e2) ")"
-  show (TimesVE e1 e2) = "(" ++ (show e1) ++ "*" ++ (show e2) ")"
+  show (PlusVE e1 e2) = "(" ++ (show e1) ++ "+" ++ (show e2) ++ ")"
+  show (MinusVE e1 e2) = "(" ++ (show e1) ++ "-" ++ (show e2) ++ ")"
+  show (TimesVE e1 e2) = "(" ++ (show e1) ++ "*" ++ (show e2) ++ ")"
 
 
 
@@ -244,7 +249,7 @@ instance Env ListEnv where
 
 instance Env FunEnv where
   emptyEnv :: FunEnv
-  emptyEnv = Nothing
+  emptyEnv = \x -> Nothing --stack build reminded  me this is to be a funenv whcih is a func itself, taking string and giving a maybe which here is nothing, but so do i just, trow something infront of it?
 
 
   lookupInEnv :: String -> FunEnv -> Maybe Int
